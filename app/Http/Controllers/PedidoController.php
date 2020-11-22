@@ -66,9 +66,9 @@ class PedidoController extends Controller
         try {
             $data = $request->except(array('_method', '_token'));
 
-            $cliente = $this->clienteService->inserir($data);
+            $this->clienteService->inserir($data);
 
-            return view('avoi.cliente.editar', compact('cliente'));
+            return redirect()->route('cliente.cadastrar')->with('messagemSucesso', 'Cliente cadastrado com sucesso!');
         } catch (\Throwable $th) {
             return redirect()->back()->with('error', 'Ocorreu um erro, tente novamente e caso persista contacte nossa equipe!');
         }
