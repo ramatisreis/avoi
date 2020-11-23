@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Cliente extends Model
 {
-    protected $table = 'avoi.cliente';
+    protected $table = 'public.cliente';
 
     protected $primaryKey = 'id_cliente';
 

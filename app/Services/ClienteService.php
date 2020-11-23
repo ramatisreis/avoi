@@ -24,6 +24,11 @@ class ClienteService implements DefaultService
         return $this->clienteRepository->atualizar($data, $id);
     }
 
+    public function obterTodosAtivos()
+    {
+        return $this->clienteRepository->obterTodosAtivos();
+    }
+
     public function obterTodos()
     {
         return $this->clienteRepository->obterTodos();

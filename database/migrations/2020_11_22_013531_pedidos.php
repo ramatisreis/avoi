@@ -13,13 +13,14 @@ class Pedidos extends Migration
      */
     public function up()
     {
-        Schema::create('pedido', function (Blueprint $table) {
+        Schema::create('cliente', function (Blueprint $table) {
             $table->id('id_pedido');
             $table->string('nome_cliente', 50);
             $table->string('galc', 50);
             $table->integer('porta')->nullable();
             $table->string('endereco_instalacao', 100)->nullable();
             $table->integer('velocidade');
+            $table->integer('excluido');
         });
     }
 

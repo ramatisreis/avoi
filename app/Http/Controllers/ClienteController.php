@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\ClienteService;
 use Illuminate\Http\Request;
 
-class PedidoController extends Controller
+class ClienteController extends Controller
 {
 
     protected $clienteService;
@@ -15,23 +15,33 @@ class PedidoController extends Controller
         $this->clienteService = $clienteService;
     }
 
+    public function listarClientesAtivos()
+    {
+        try {
+            $clientes = $this->clienteService->obterTodosAtivos();
+
+            return view('avoi.cliente.listarativos', compact('clientes'));
+        } catch (\Exception $th) {
+            return redirect()->back()->with('error', 'Ocorreu um erro, tente novamente e caso persista contacte nossa equipe!');
+        }
+    }
+
     public function listarClientes()
     {
         try {
             $clientes = $this->clienteService->obterTodos();
 
             return view('avoi.cliente.listar', compact('clientes'));
-        } catch (\Throwable $th) {
+        } catch (\Exception $th) {
             return redirect()->back()->with('error', 'Ocorreu um erro, tente novamente e caso persista contacte nossa equipe!');
         }
     }
 
 
-    public function editarCliente(Request $request)
+    public function editarCliente($id)
     {
         try {
-            $data = $request->all();
-            $cliente = $this->clienteService->obter($data['id_cliente']);
+            $cliente = $this->clienteService->obter($id)[0];
 
             return view('avoi.cliente.editar', compact('cliente'));
         } catch (\Throwable $th) {
@@ -46,8 +56,10 @@ class PedidoController extends Controller
 
             $this->clienteService->atualizar($data, $data['id_cliente']);
 
-            return redirect()->route('cliente.editar')->with('messagemSucesso', 'Cliente atualizado com sucesso!');
+            return redirect()->route('cliente.listar')->with('messagemSucesso', 'Cliente atualizado com sucesso!');
         } catch (\Throwable $th) {
+            /* dd($th);
+            die; */
             return redirect()->back()->with('error', 'Ocorreu um erro, tente novamente e caso persista contacte nossa equipe!');
         }
     }
@@ -68,17 +80,31 @@ class PedidoController extends Controller
 
             $this->clienteService->inserir($data);
 
-            return redirect()->route('cliente.cadastrar')->with('messagemSucesso', 'Cliente cadastrado com sucesso!');
+            return redirect()->route('cliente.listar')->with('messagemSucesso', 'Cliente cadastrado com sucesso!');
         } catch (\Throwable $th) {
             return redirect()->back()->with('error', 'Ocorreu um erro, tente novamente e caso persista contacte nossa equipe!');
         }
     }
 
-    public function deletePedidoDo($id)
+    public function deletarCliente($id)
     {
         try {
-            $this->clienteService->deletar($id);
-            return redirect()->route('cliente.listar')->with('messagemSucesso', 'Cliente excluido com sucesso!');
+            $cliente = $this->clienteService->obter($id)[0];
+
+            return view('avoi.cliente.deletar', compact('cliente'));
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Ocorreu um erro, tente novamente e caso persista contacte nossa equipe!');
+        }
+    }
+
+    public function deletarClienteDo(Request $request)
+    {
+        try {
+            $data = $request->except(array('_method', '_token'));
+
+            $this->clienteService->deletar($data['id_cliente']);
+
+            return redirect()->route('cliente.listar')->with('messagemSucesso', 'Cliente excluído com sucesso!');
         } catch (\Throwable $th) {
             return redirect()->back()->with('error', 'Ocorreu um erro, tente novamente e caso persista contacte nossa equipe!');
         }

@@ -32,11 +32,20 @@ class ClienteRepository
         });
     }
 
-    public function obterTodos()
+    public function obterTodosAtivos()
     {
         $rt = DB::transaction(function () {
             return Cliente::where('excluido', 0)
                 ->orderBy('id_cliente', 'asc')->get();
+        });
+
+        return $rt;
+    }
+
+    public function obterTodos()
+    {
+        $rt = DB::transaction(function () {
+            return Cliente::orderBy('excluido', 'asc')->orderBy('id_cliente', 'desc')->get();
         });
 
         return $rt;

@@ -8,6 +8,7 @@ class DefaultRepository
 
     public function inserir(array $data)
     {
+        
     }
 
     public function atualizar(array $data, $id)
