@@ -11,6 +11,7 @@
         <!-- Styles -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
         <!-- Styles -->
         <style>
@@ -24,6 +25,25 @@
         </style>
     </head>
     <body class="antialiased">
+        @if(isset($errors) && count($errors)> 0)
+            <div id="div_error" style="display: none">
+                @foreach($errors->all() as $erro)
+                    {{ $erro }} <br/>
+                @endforeach
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div id="div_error" style="display: none">
+                    {{ session('error') }} 
+            </div>
+        @endif
+
+        @if(session('messagemSucesso'))
+            <div id="div_messagemSucesso" style="display: none">
+                    {{ session('messagemSucesso') }} 
+            </div>
+        @endif
         <div class="card-body">
             <h3>Editar <span class="badge badge-secondary">Cliente</span></h3>
             
@@ -85,4 +105,39 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
+
+    <script>
+        var has_success = {{ session('messagemSucesso') ? 'true' : 'false' }};
+    
+        if(has_success == true){
+            Swal.fire({
+                title: '<strong>Sucesso</strong>',
+                icon: 'success',
+                html: jQuery('#div_messagemSucesso').html(),
+                showCloseButton: true,         
+            })
+        }
+
+        var has_error = {{ $errors->count() > 0 ? 'true' : 'false' }};
+
+        if(has_error == true){
+            Swal.fire({
+                title: '<strong>Alerta</strong>',
+                icon: 'info',
+                html: jQuery('#div_error').html(),
+                showCloseButton: true,         
+            })
+        }
+
+        var has_error = {{ session('error') ? 'true' : 'false' }};
+
+        if(has_error == true){
+            Swal.fire({
+                title: '<strong>Alerta</strong>',
+                icon: 'info',
+                html: jQuery('#div_error').html(),
+                showCloseButton: true,         
+            })
+        }
+    </script>
 </html>
